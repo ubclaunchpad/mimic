@@ -11,10 +11,10 @@ class MarkovChainModel(Model):
 
     def learn(self, data):
         print('Learning...')
-        for i in range(len(data) - this.stateLen):
+        for i in range(0, len(data) - this.stateLen):
             state = data[i, i+this.stateLen]
-            next = data[i_this.statLen]
-            model[state][next] += 1
+            next = data[i + this.statLen]
+            this.dict[state][next] += 1
         print('Finished Learning')
         print('--------')
         for k,v in this.dict.items():
@@ -27,4 +27,3 @@ class MarkovChainModel(Model):
             out.extend(random.choices(list(model[state]), model[state].values()))
             state = state[1:] + out[-1]
         print(''.join(out))
-            
