@@ -1,15 +1,21 @@
+"""Model superclass."""
+
+
 class Model:
-    """an abstract class representing a general model
-    all models will share these behaviors"""
+    """
+    An abstract class representing a general model.
+
+    All models will share these behaviors.
+    """
 
     def __init__(self):
-        """initializes the model"""
+        """Initialize the model."""
         pass
 
     def learn(self, text):
-        """trains the model"""
+        """Trains the model."""
         raise NotImplementedError
 
     def predict(self):
-        """generates output"""
+        """Generate output."""
         raise NotImplementedError
