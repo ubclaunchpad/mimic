@@ -15,5 +15,5 @@ mf = io.BytesIO()
 with zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
     zf.writestr('clean_shakespear.txt', str.encode(processed_text,'utf-8'))
 
-with open("../data/clean_shakespear.zip", "wb") as f: # use `wb` mode
+with open("../data/clean_shakespeare.zip", "wb") as f: # use `wb` mode
     f.write(mf.getvalue())
