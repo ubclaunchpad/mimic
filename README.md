@@ -1,4 +1,4 @@
-# 🤖 Mimic
+# 💬 Mimic
 
 [![Build Status](https://travis-ci.com/ubclaunchpad/mimic.svg?branch=master)](https://travis-ci.com/ubclaunchpad/mimic)
 
