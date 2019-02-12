@@ -1,6 +1,5 @@
 from mimic.model.model import Model
 
-# Keras & Tensorflow imports
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
@@ -9,12 +8,10 @@ from keras.models import Sequential
 import keras.utils as ku 
 import tensorflow as tf
 
-# Useful util imports
 import numpy as np
 import string, os 
 
 class LSTMModel(Model):
-
 
     def __init__(self):
         self.tokenizer = Tokenizer()
@@ -22,7 +19,7 @@ class LSTMModel(Model):
     ''' Create sequences to train the model - each is a sequence of tokens that represent characters '''
     def learn(self, text):
 
-        # TODO seq_len and batch_size are currently arbitrary
+        # TODO These are currently arbitrary - we can look at varying these depending on the size of the input text
         SEQ_LEN = 100
         BATCH_SIZE = 200
 
@@ -31,7 +28,7 @@ class LSTMModel(Model):
         clean_txt = text.encode("utf8").decode("ascii",'ignore')
 
         # TODO: We need some method of splitting up the input text into chunks of a certain size
-        # should be randomized so that we have a good diversity of text
+        # This should be considered along with creating SEQ_LEN & BATCH_SIZE parameters
         corpus = list((clean_txt[0+i:SEQ_LEN+i] for i in range(0, len(clean_txt), SEQ_LEN)))[0:BATCH_SIZE]
 
         ## Tokenization of corpus
@@ -45,13 +42,13 @@ class LSTMModel(Model):
                 input_sequences.append(n_gram_sequence)
 
         # This creates sequences such that all the sequences are the same length
-        self.max_sequence_len = max([len(x) for x in input_sequences])
-        input_sequences = np.array(pad_sequences(input_sequences, maxlen=self.max_sequence_len, padding='pre'))
-        predictors, label = input_sequences[:,:-1],input_sequences[:,-1]
-        label = ku.to_categorical(label, num_classes=total_words)
+        max_sequence_len = max([len(x) for x in input_sequences])
+        input_sequences = np.array(pad_sequences(input_sequences, maxlen=max_sequence_len, padding='pre'))
+        predictors = input_sequences[:,:-1]
+        label = ku.to_categorical(input_sequences[:,-1], num_classes=total_words)
 
         # Creates the LSTM model to train
-        input_len = self.max_sequence_len - 1
+        input_len = max_sequence_len - 1
         model = Sequential()
         # Add Input Embedding Layer
         model.add(Embedding(total_words, 10, input_length=input_len))
@@ -62,10 +59,12 @@ class LSTMModel(Model):
         model.add(Dense(total_words, activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam')
         model.fit(predictors, label, epochs=100, verbose=5)
+
+        self.max_sequence_len = max_sequence_len
         self.model = model 
 
     def predict(self):
-        # Arbitrary constants for now
+        # TODO this uses arbitrary constants for now
         seed_text = "where art thou"
         for _ in range(50):
             token_list = self.tokenizer.texts_to_sequences([seed_text])[0]
