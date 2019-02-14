@@ -1,4 +1,3 @@
-
 import random
 from mimic.model.model import Model
 
@@ -41,4 +40,4 @@ class MarkovChainModel(Model):
             next = random.choice(self.dict[state])
             result.append(next)
 
-        return "".join(result[self.order:])
+        return " ".join(result[self.order:])
