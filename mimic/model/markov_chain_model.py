@@ -5,17 +5,28 @@ from mimic.model.model import Model
 
 
 class MarkovChainModel(Model):
-    """A type of model"""
+    """A type of model."""
+
     def __init__(self, stateLength):
+        """
+        Constructor.
+
+        Takes an int stateLength as an argument
+        and instantiates a model.
+        """
         self.order = stateLength
         self.groupSize = stateLength + 1
         self.dict = {}
         self.data = None
 
     def learn(self, data):
-        """Takes in a list of words as an argument
+        """
+        Learn method.
+
+        Takes in a list of words as an argument
         and constructs a dictionary based
-        on stateLength provided by the user"""
+        on stateLength provided by the user.
+        """
         print('Learning...')
         self.data = data.split()
 
@@ -32,8 +43,12 @@ class MarkovChainModel(Model):
         print('--------')
 
     def predict(self, length):
-        """Uses the generated dictionary to create a
-        sentence of specified length"""
+        """
+        Predict method.
+
+        Uses the generated dictionary to create a
+        sentence of specified length.
+        """
         index = random.randint(0, len(self.data) - self.order)
         result = self.data[index: index + self.order]
 
