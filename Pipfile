@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 requests = "*"
 toml = "*"
+keras = "*"
+tensorflow = "*"
 
 [dev-packages]
 codecov = "*"
