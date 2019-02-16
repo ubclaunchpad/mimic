@@ -49,7 +49,7 @@ class MarkovChainModel(Model):
         index = random.randint(0, len(self.data) - self.order)
         result = self.data[index: index + self.order]
 
-        for i in range(length):
+        for _ in range(length):
             state = tuple(result[len(result) - self.order:])
             next = random.choice(self.dict[state])
             result.append(next)
