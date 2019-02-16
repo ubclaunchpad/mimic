@@ -3,10 +3,10 @@
 import random
 from mimic.model.model import Model
 
+
 class MarkovChainModel(Model):
     """A type of model"""
-
-    def __init__ (self, stateLength):
+    def __init__(self, stateLength):
         self.order = stateLength
         self.groupSize = stateLength + 1
         self.dict = {}
@@ -19,9 +19,9 @@ class MarkovChainModel(Model):
         print('Learning...')
         self.data = data.split()
 
-        for i in range(0,len(data) - self.groupSize):
-            key = tuple(data[i: i +self.order])
-            value = data[i+ self.order]
+        for i in range(0, len(data) - self.groupSize):
+            key = tuple(data[i: i + self.order])
+            value = data[i + self.order]
 
             if key in self.dict:
                 self.dict[key].append(value)
@@ -31,10 +31,10 @@ class MarkovChainModel(Model):
         print('Finished Learning')
         print('--------')
 
-
     def predict(self, length):
-        """Uses the generated dictionary to create a sentence of specified length"""
-        index = random.randint(0,len(self.data) - self.order)
+        """Uses the generated dictionary to create a
+        sentence of specified length"""
+        index = random.randint(0, len(self.data) - self.order)
         result = self.data[index: index + self.order]
 
         for i in range(length):
@@ -43,4 +43,3 @@ class MarkovChainModel(Model):
             result.append(next)
 
         return " ".join(result[self.order:])
-
