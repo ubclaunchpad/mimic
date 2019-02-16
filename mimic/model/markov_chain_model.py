@@ -1,3 +1,5 @@
+"""Markov chain model class."""
+
 import random
 from mimic.model.model import Model
 
@@ -41,3 +43,4 @@ class MarkovChainModel(Model):
             result.append(next)
 
         return " ".join(result[self.order:])
+
