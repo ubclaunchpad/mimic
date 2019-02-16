@@ -17,7 +17,7 @@ class MarkovChainModel(Model):
         and constructs a dictionary based
         on stateLength provided by the user"""
         print('Learning...')
-        self.data = data
+        self.data = data.split()
 
         for i in range(0,len(data) - self.groupSize):
             key = tuple(data[i: i +self.order])
