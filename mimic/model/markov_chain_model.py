@@ -2,6 +2,7 @@
 
 import random
 from mimic.model.model import Model
+from collections import defaultdict
 
 
 class MarkovChainModel(Model):
@@ -16,7 +17,7 @@ class MarkovChainModel(Model):
         """
         self.order = stateLength
         self.groupSize = stateLength + 1
-        self.dict = {}
+        self.dict = defaultdict
         self.data = None
 
     def learn(self, data):
@@ -30,14 +31,10 @@ class MarkovChainModel(Model):
         print('Learning...')
         self.data = data.split()
 
-        for i in range(0, len(data) - self.groupSize):
-            key = tuple(data[i: i + self.order])
-            value = data[i + self.order]
-
-            if key in self.dict:
-                self.dict[key].append(value)
-            else:
-                self.dict[key] = [value]
+        for i in range(0, len(self.data) - self.groupSize):
+            key = tuple(self.data[i: i + self.order])
+            value = self.data[i + self.order]
+            self.dict[key].append(value)
 
         print('Finished Learning')
         print('--------')
