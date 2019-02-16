@@ -9,8 +9,12 @@ class TestTextGeneratorFactory(unittest.TestCase):
         self.textGeneratorFactory = TextGeneratorFactory()
 
     def test_create_markov_chain_text_generator(self):
-        assert(isinstance(self.textGeneratorFactory.create_markov_chain_text_generator(), TextGenerator))
+        factory = self.textGeneratorFactory
+        testGenerator = factory.create_markov_chain_text_generator()
+        assert(isinstance(testGenerator, TextGenerator))
 
     def test_create_LTSM_text_generator(self):
-        # assert(isinstance(self.textGeneratorFactory.create_LTSM_text_generator(), TextGenerator))
+        # factory = self.textGeneratorFactory
+        # testGenerator = factory.create_LTSM_text_generator()
+        # assert(isinstance(testGenerator, TextGenerator))
         pass
