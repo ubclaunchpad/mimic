@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 requests = "*"
 toml = "*"
+keras = "*"
+tensorflow = "*"
 
 [dev-packages]
 codecov = "*"
@@ -16,4 +18,4 @@ pytest = "*"
 pytest-cov = "*"
 
 [requires]
-python_version = "3.7"
+python_version = "3.6"
