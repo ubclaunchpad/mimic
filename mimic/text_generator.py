@@ -1,12 +1,18 @@
+"""Core text generator module."""
 from mimic.model.model import Model
 import zipfile, os
 
+
 class TextGenerator:
-    """a user facing class that abstracts away text processing details
-     and interactions with the models"""
+    """
+    Core text generation class.
+
+    User-facing class that abstracts away text processing details and
+    interacts with models.
+    """
 
     def __init__(self, model):
-        """initiates the a TextGenerator with a given model type"""
+        """Initialize a TextGenerator with the given model type."""
         self.model = model
 
     def load_text_zip(self, zip_file_path):
@@ -23,4 +29,5 @@ class TextGenerator:
     def generate_text(self):
         """generates textual output based on training data"""
         raise NotImplementedError
+
 
