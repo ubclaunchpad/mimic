@@ -17,7 +17,7 @@ class TextGenerator:
         self.model = model
 
     def load_text_zip(self, zip_file_path):
-        """prepares a text file for consumption by the model"""
+        """Prepare a text file for consumption by the model."""
         files = []
 
         with zipfile.ZipFile(zip_file_path, "r") as archive:
@@ -31,5 +31,5 @@ class TextGenerator:
         return text_string
 
     def generate_text(self):
-        """generates textual output based on training data"""
+        """Generate textual output based on training data."""
         raise NotImplementedError
