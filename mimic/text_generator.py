@@ -1,6 +1,7 @@
 """Core text generator module."""
 from mimic.model.model import Model
-import zipfile, os
+import zipfile
+import os
 
 
 class TextGenerator:
@@ -17,9 +18,12 @@ class TextGenerator:
 
     def load_text_zip(self, zip_file_path):
         """prepares a text file for consumption by the model"""
+        files = []
 
         with zipfile.ZipFile(zip_file_path, "r") as archive:
-            files = [archive.read(name).decode('utf-8') for name in archive.namelist() if name.endswith(".txt")]
+            for name in archive.namelist():
+                if name.endswith(".txt"):
+                    files.append(archive.read(name).decode('utf-8'))
             dir_name = os.path.dirname(zip_file_path)
             text_string = " ".join(files)
             archive.extractall(dir_name)
@@ -29,5 +33,3 @@ class TextGenerator:
     def generate_text(self):
         """generates textual output based on training data"""
         raise NotImplementedError
-
-

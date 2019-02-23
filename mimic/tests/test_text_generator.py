@@ -10,9 +10,10 @@ class TestTextGenerator(unittest.TestCase):
 
     def test_load_text_zip(self):
         text = self.textGenerator.load_text_zip("../../data/test.zip")
-        expected = "Test 3 is also done now. This is a second test.\nTest 2 is done. This a test file.\nTest 1 done."
+        expected = "Test 3 is also done now. This is a second test.\n" \
+                   "Test 2 is done. This a test file.\n" \
+                   "Test 1 done."
         assert text == expected
-    
 
     def test_generate(self):
         pass
