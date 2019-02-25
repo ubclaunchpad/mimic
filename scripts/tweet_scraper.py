@@ -21,7 +21,7 @@ def main():
     from_date = date(2016,6,15)
     to_date = date(2019,2,24)
     # Scraping tweets every "gap" days
-    gap = 5
+    gap = 1
     days = (to_date-from_date).days
 
     # HTML contents will be appended here
@@ -66,6 +66,9 @@ def main():
         except:
             # Returns to original search page
             browser.get('https://twitter.com/search-advanced?lang=en&lang=en&lang=en&lang=en&lang=en')
+
+    # with open("all_html.txt", "w", encoding="utf8") as f:
+    #     f.write(all_browser)
 
     # Parses out the individual tweets from HTML
     tweets = ""
