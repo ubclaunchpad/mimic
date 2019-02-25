@@ -1,5 +1,6 @@
 """LSTM model class."""
 from mimic.model.model import Model
+import mimic.util as utils
 
 from keras.preprocessing.sequence import pad_sequences
 from keras.layers import Embedding, LSTM, Dense, Dropout
@@ -28,9 +29,9 @@ class LSTMModel(Model):
         SEQ_LEN = 100
         BATCH_SIZE = 200
 
-        # Clean text of weird characters
-        text = "".join(v for v in text if v not in string.punctuation).lower()
-        clean_txt = text.encode("utf8").decode("ascii", 'ignore')
+        # Clean & verify text
+        clean_txt = utils.clean_text(text)
+        utils.verify_text(clean_txt)
 
         # TODO: We need some method of splitting up the
         # input text into chunks of a certain size
