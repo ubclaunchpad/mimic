@@ -17,7 +17,7 @@ import zipfile
 
 
 def main():
-    """Run the browser driver"""
+    """Run the browser driver."""
     # Trump's Campaign 2016-06-15 - 2019-02-24
     # The timeline can be toggled below
     from_date = date(2016, 6, 15)
