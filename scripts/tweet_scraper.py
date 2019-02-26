@@ -1,5 +1,4 @@
-"""Scrapes tweets from the Twitter advanced search page
-to get over the 3200 tweets limit"""
+"""Scrapes tweets from the Twitter advanced search page."""
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -108,16 +107,24 @@ def main():
 
 class last_element_is_the_same():
     """
-    Class used to detect when end of page is reached
+    Class used to detect when end of page is reached.
 
-    Takes in a tuple of (HTML attribute, name) and text of previous tweet
+    Takes in a tuple of (HTML attribute, name) and text of previous tweet.
     """
+
     def __init__(self, locator, previous):
-        # previous is the last tweet before scrolling in text form
+        """
+        Constructor.
+
+        Takes in a tuple of (HTML attribute, name) and text of previous tweet.
+        """
         self.locator = locator
         self.previous = previous
 
     def __call__(self, browser):
+        """
+        Takes in the current driver.
+        """
         new_tweets = browser.find_elements(*self.locator)
         if new_tweets[-1].text != self.previous:
             return True
@@ -129,7 +136,7 @@ def scroller(browser, wait):
     """
     Scrolls to end of page.
 
-    Takes in the browser driven and the 'WebDriverWait' object
+    Takes in the browser driver and the 'WebDriverWait' object.
     """
     while True:
         tweets = browser.find_elements_by_class_name("tweet-text")
@@ -143,4 +150,5 @@ def scroller(browser, wait):
 
 
 if __name__ == "__main__":
+    """Runs main body."""
     main()
