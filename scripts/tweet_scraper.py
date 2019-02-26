@@ -17,6 +17,7 @@ import zipfile
 
 
 def main():
+    """Main body."""
     # Trump's Campaign 2016-06-15 - 2019-02-24
     # The timeline can be toggled below
     from_date = date(2016, 6, 15)
@@ -109,7 +110,7 @@ class last_element_is_the_same():
     """
     Class used to detect when end of page is reached.
 
-    Takes in a tuple of (HTML attribute, name) and text of previous tweet.
+    Take in a tuple of (HTML attribute, name) and text of previous tweet.
     """
 
     def __init__(self, locator, previous):
@@ -122,9 +123,7 @@ class last_element_is_the_same():
         self.previous = previous
 
     def __call__(self, browser):
-        """
-        Takes in the current driver.
-        """
+        """Verifies whether the last and current tweets are the same."""
         new_tweets = browser.find_elements(*self.locator)
         if new_tweets[-1].text != self.previous:
             return True
