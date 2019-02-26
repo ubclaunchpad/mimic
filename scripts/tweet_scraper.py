@@ -1,4 +1,5 @@
-"""Script to scrape tweets from the advanced search Twitter page to get over the 3200 tweets limit"""
+"""Scrapes tweets from the Twitter advanced search page
+to get over the 3200 tweets limit"""
 
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -15,13 +16,16 @@ import io
 import re
 import zipfile
 
+
 def main():
-    # Trump's Presidential Campaign 2016-06-15 - present
+    # Trump's Campaign 2016-06-15 - 2019-02-24
     # The timeline can be toggled below
-    from_date = date(2016,6,15)
-    to_date = date(2019,2,24)
+    from_date = date(2016, 6, 15)
+    to_date = date(2019, 2, 24)
     # Scraping tweets every "gap" days
     gap = 1
+    # Twitter handle
+    user_input = "realDonaldTrump"
     days = (to_date-from_date).days
 
     # HTML contents will be appended here
@@ -32,30 +36,37 @@ def main():
     wait = WebDriverWait(browser, 2)
 
     # Launches Twitter advanced search page
-    browser.get('https://twitter.com/search-advanced?lang=en&lang=en&lang=en&lang=en&lang=en')
+    browser.get("https://twitter.com/search-advanced?"
+                "lang=en&lang=en&lang=en&lang=en&lang=en")
 
     # Iterates through desired dates to obtain tweets
-    for day in range(0,days,gap):
+    for day in range(0, days, gap):
         from_ = from_date + timedelta(days=day)
         to_ = from_date + timedelta(days=day+gap)
-        from_input = "{dt.year}-{dt.month}-{dt.day}".format(dt = from_)
-        to_input = "{dt.year}-{dt.month}-{dt.day}".format(dt = to_)
+        from_input = "{dt.year}-{dt.month}-{dt.day}".format(dt=from_)
+        to_input = "{dt.year}-{dt.month}-{dt.day}".format(dt=to_)
         time.sleep(2)
 
         try:
-            user_field = browser.find_element_by_xpath("//input[@type='text' and @name='from']")
-            user_field.send_keys("realDonaldTrump")
+            user_field = browser.find_element_by_xpath("//input[@type='text'"
+                                                       "and @name='from']")
+            user_field.send_keys(user_input)
 
-            from_field = browser.find_element_by_xpath("//input[contains(@class, 'input-sm') and @name='since']")
+            from_field = browser.find_element_by_xpath("//input\
+                            [contains(@class, 'input-sm') and @name='since']")
             from_field.send_keys(from_input)
-            to_field = browser.find_element_by_xpath("//input[contains(@class, 'input-sm') and @name='until']")
+
+            to_field = browser.find_element_by_xpath("//input\
+                            [contains(@class, 'input-sm') and @name='until']")
             to_field.send_keys(to_input)
 
-            search_button = browser.find_element_by_xpath("//button[@type='submit' and contains(@class, 'EdgeButton')]")
+            search_button = browser.find_element_by_xpath("//button\
+                         [@type='submit' and contains(@class, 'EdgeButton')]")
             search_button.click()
 
             try:
-                wait.until(EC.presence_of_element_located((By.CLASS_NAME, "tweet-text")))
+                wait.until(EC.presence_of_element_located((
+                                                By.CLASS_NAME, "tweet-text")))
                 scroller(browser, wait)
             except TimeoutException:
                 pass
@@ -63,9 +74,10 @@ def main():
             all_browser += browser.page_source
 
             browser.execute_script("window.history.go(-1)")
-        except:
+        except Exception:
             # Returns to original search page
-            browser.get('https://twitter.com/search-advanced?lang=en&lang=en&lang=en&lang=en&lang=en')
+            browser.get("https://twitter.com/search-advanced?"
+                        "lang=en&lang=en&lang=en&lang=en&lang=en")
 
     # with open("all_html.txt", "w", encoding="utf8") as f:
     #     f.write(all_browser)
@@ -83,14 +95,16 @@ def main():
     print("HTML size: {} MB".format(sys.getsizeof(all_browser)/1e6))
 
     # Approximately number of words and size of tweets
-    print("Words: {}\nTweets Size: {} MB".format(sys.getsizeof(tweets)/5, sys.getsizeof(tweets)/1e6))
+    print("Words: {}\nTweets Size: {} MB".format(sys.getsizeof(tweets)/5,
+          sys.getsizeof(tweets)/1e6))
 
     # Saves tweets as zip
     mf = io.BytesIO()
     with zipfile.ZipFile(mf, mode="w", compression=zipfile.ZIP_DEFLATED) as zf:
-        zf.writestr('trump_tweets.txt', str.encode(tweets, 'utf-8'))
+        zf.writestr("trump_tweets.txt", str.encode(tweets, 'utf-8'))
     with open("../data/trump_tweets.zip", "wb") as f:  # use `wb` mode
         f.write(mf.getvalue())
+
 
 class last_element_is_the_same():
     """
@@ -102,12 +116,14 @@ class last_element_is_the_same():
         # previous is the last tweet before scrolling in text form
         self.locator = locator
         self.previous = previous
+
     def __call__(self, browser):
         new_tweets = browser.find_elements(*self.locator)
         if new_tweets[-1].text != self.previous:
             return True
         else:
             return False
+
 
 def scroller(browser, wait):
     """
@@ -118,10 +134,13 @@ def scroller(browser, wait):
     while True:
         tweets = browser.find_elements_by_class_name("tweet-text")
         browser.execute_script("arguments[0].scrollIntoView();", tweets[-1])
+
         try:
-            wait.until(last_element_is_the_same((By.CLASS_NAME, "tweet-text"), tweets[-1].text))
+            wait.until(last_element_is_the_same((By.CLASS_NAME, "tweet-text"),
+                       tweets[-1].text))
         except TimeoutException:
             break
+
 
 if __name__ == "__main__":
     main()
