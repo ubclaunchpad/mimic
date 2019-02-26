@@ -17,7 +17,7 @@ import zipfile
 
 
 def main():
-    """Main body."""
+    """Run the browser driver"""
     # Trump's Campaign 2016-06-15 - 2019-02-24
     # The timeline can be toggled below
     from_date = date(2016, 6, 15)
@@ -123,7 +123,7 @@ class last_element_is_the_same():
         self.previous = previous
 
     def __call__(self, browser):
-        """Verifies whether the last and current tweets are the same."""
+        """Verify whether the last and current tweets are the same."""
         new_tweets = browser.find_elements(*self.locator)
         if new_tweets[-1].text != self.previous:
             return True
