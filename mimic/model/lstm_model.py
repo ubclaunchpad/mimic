@@ -24,14 +24,18 @@ class LSTMModel(Model):
         self.tokenizer = Tokenizer()
         self.seqLen = sequenceLength
         self.predLen = predictionLength
+        logging.info('Initialized LSTM Model')
 
     def learn(self, text):
         """Use input text to train the LSTM model."""
         # Clean & verify text
+        logging.info('Cleaning and verifying text')
+
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
         utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
+        logging.info('Tokenizing Corpus')
         corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(0,
                                                                   txt_len,
                                                                   self.seqLen))
@@ -67,9 +71,11 @@ class LSTMModel(Model):
 
         self.max_sequence_len = max_sequence_len
         self.model = model
+        logging.info('Tokenization successfully completed')
 
     def predict(self):
         """Generate a sequence of text based on prior training."""
+        logging.info('Generating text')
         split_input_text = self.cleaned_input_text.split()
         # Picks a random word from the input text as seed
         seed_text = split_input_text[randint(0, len(split_input_text)-1)]
@@ -87,4 +93,5 @@ class LSTMModel(Model):
                     output_word = word
                     break
             seed_text += " "+output_word
+        logging.info('Text successfully generated.')
         return seed_text
