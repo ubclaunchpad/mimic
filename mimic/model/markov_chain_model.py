@@ -4,6 +4,7 @@ import random
 from mimic.model.model import Model
 from collections import defaultdict
 import logging
+import pickle
 
 
 class MarkovChainModel(Model):
@@ -20,6 +21,7 @@ class MarkovChainModel(Model):
         self.groupSize = stateLength + 1
         self.dict = defaultdict(list)
         self.data = None
+        self.dump = None
         logging.info('Markov Model instantiated')
 
     def learn(self, data):
@@ -40,6 +42,8 @@ class MarkovChainModel(Model):
 
         logging.info('Finished Learning')
         logging.info('--------')
+        self.dump = (self.order, self.dict, self.data)
+
 
     def predict(self, length):
         """
@@ -58,3 +62,17 @@ class MarkovChainModel(Model):
             result.append(next)
 
         return " ".join(result[self.order:])
+
+    def save(self, path, filename):
+        """Save model as a pickle file."""
+        pickle_out = open(path+filename+".pickle", "wb")
+        pickle.dump(self.dump, pickle_out)
+        pickle_out.close()
+
+    def load(self, path):
+        """Load pickle file and reassigns values."""
+        pickle_in = open(path + ".pickle", "rb")
+        importDump = pickle.load(pickle_in)
+        pickle_in.close()
+        self.order, self.dict, self.data = importDump
+        self.groupSize = self.order + 1
