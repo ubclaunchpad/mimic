@@ -4,12 +4,13 @@ from mimic.model.markov_chain_model import MarkovChainModel
 from mimic.model.lstm_model import LSTMModel
 from mimic.text_generator import TextGenerator
 
-# Number of words to "learn" from 
+# Number of words to "learn" from
 DEFAULT_MARKOV_STATE_LENGTH = 5
 # Number of words in each training sequence
 DEFAULT_LSTM_SEQ_LEN = 100
 # Number of words to generate
 DEFAULT_OUTPUT_LEN = 50
+
 
 class TextGeneratorFactory:
     """

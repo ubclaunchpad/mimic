@@ -29,11 +29,12 @@ class LSTMModel(Model):
         """Use input text to train the LSTM model."""
         # Clean & verify text
         clean_txt = utils.clean_text(text)
+        txt_len = len(clean_txt)
         utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
         corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(0,
-                                                              len(clean_txt),
-                                                              self.seqLen))
+                                                                  txt_len,
+                                                                  self.seqLen))
         # Tokenization of corpus
         self.tokenizer.fit_on_texts(corpus)
         total_words = len(self.tokenizer.word_index) + 1
