@@ -18,10 +18,9 @@ class MarkovChainModel(Model):
         """
         self.order = stateLength
         self.groupSize = stateLength + 1
-        self.dict = defaultdict
+        self.dict = defaultdict(list)
         self.data = None
-        logging.basicConfig(format='%(asctime)s %(message)s', filename='markov.log',level=logging.DEBUG)
-        logging.info(format='Markov Model instantiated')
+        logging.info('Markov Model instantiated')
 
     def learn(self, data):
         """
