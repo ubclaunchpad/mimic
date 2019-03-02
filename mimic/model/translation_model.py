@@ -1,6 +1,5 @@
 """Translation model class."""
 from mimic.model.model import Model
-from sklearn.model_selection import train_test_split
 from keras.models import Sequential
 from keras.layers import LSTM
 from keras.layers import Dense
@@ -23,9 +22,6 @@ class TranslationModel(Model):
 
     def learn(self, bilingual_text):
         """Trains the model."""
-        train, test = train_test_split(
-            bilingual_text, test_size=0.1, random_state=42)
-
         # prepare source language tokenizer
         src_tokenizer = self._create_tokenizer(bilingual_text[:, 0])
         src_vocab_size = len(src_tokenizer.word_index) + 1
@@ -37,13 +33,11 @@ class TranslationModel(Model):
         tar_length = self._max_length(bilingual_text[:, 1])
 
         # prepare training data
-        trainX = self._encode_sequences(src_tokenizer, src_length, train[:, 1])
-        trainY = self._encode_sequences(tar_tokenizer, tar_length, train[:, 0])
+        trainX = self._encode_sequences(src_tokenizer, src_length,
+                                        bilingual_text[:, 0])
+        trainY = self._encode_sequences(tar_tokenizer, tar_length,
+                                        bilingual_text[:, 1])
         trainY = self._encode_output(trainY, tar_vocab_size)
-        # prepare test data
-        testX = self._encode_sequences(src_tokenizer, src_length, test[:, 1])
-        testY = self._encode_sequences(tar_tokenizer, tar_length, test[:, 0])
-        testY = self._encode_output(testY, tar_vocab_size)
 
         # define and train the model
         model = Sequential()
@@ -56,8 +50,7 @@ class TranslationModel(Model):
             Dense(tar_vocab_size, activation='softmax')))
 
         model.compile(optimizer='adam', loss='categorical_crossentropy')
-        model.fit(trainX, trainY, epochs=30, batch_size=64,
-                  validation_data=(testX, testY))
+        model.fit(trainX, trainY, epochs=30, batch_size=64)
 
         self.model = model
         self.tokenizer = tar_tokenizer
