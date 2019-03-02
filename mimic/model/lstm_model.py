@@ -13,6 +13,13 @@ import tensorflow as tf
 import numpy as np
 import string
 import os
+from random import randint
+
+
+# Number of words in each training sequence
+SEQ_LEN = 100
+# Number of words to generate
+NUM_OUTPUT_WORDS = 50
 
 
 class LSTMModel(Model):
@@ -24,24 +31,13 @@ class LSTMModel(Model):
 
     def learn(self, text):
         """Use input text to train the LSTM model."""
-        # TODO These are currently arbitrary. We can look at
-        # varying these depending on the size of the input text
-        SEQ_LEN = 100
-        BATCH_SIZE = 200
-
         # Clean & verify text
         clean_txt = utils.clean_text(text)
         utils.verify_text(clean_txt)
-
-        # TODO: We need some method of splitting up the
-        # input text into chunks of a certain size
-        # This should be considered along with
-        # creating SEQ_LEN & BATCH_SIZE parameters
-        split_corpus = (clean_txt[0+i:SEQ_LEN+i] for i in range(0,
-                                                                len(clean_txt),
-                                                                SEQ_LEN))
-        corpus = list(split_corpus)[0:BATCH_SIZE]
-
+        self.cleaned_input_text = clean_txt
+        corpus = list(clean_txt[0+i:SEQ_LEN+i] for i in range(0,
+                                                              len(clean_txt),
+                                                              SEQ_LEN))
         # Tokenization of corpus
         self.tokenizer.fit_on_texts(corpus)
         total_words = len(self.tokenizer.word_index) + 1
@@ -77,11 +73,12 @@ class LSTMModel(Model):
 
     def predict(self):
         """Generate a sequence of text based on prior training."""
-        # TODO randomly pick a word in the corpus to use as seed
-        seed_text = "where art thou"
+        split_input_text = self.cleaned_input_text.split()
+        # Picks a random word from the input text as seed
+        seed_text = split_input_text[randint(0, len(split_input_text)-1)]
 
         # Numerical input here is the # of words to generate
-        for _ in range(50):
+        for _ in range(NUM_OUTPUT_WORDS):
             token_list = self.tokenizer.texts_to_sequences([seed_text])[0]
             token_list = pad_sequences([token_list],
                                        maxlen=self.max_sequence_len-1,
