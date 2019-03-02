@@ -17,7 +17,6 @@ class TextGeneratorFactory:
                             filename='textgenerator.log',
                             level=logging.DEBUG)
 
-
     def create_markov_chain_text_generator(self):
         """Create a TextGenerator using a markov chain model."""
         return TextGenerator(MarkovChainModel())
