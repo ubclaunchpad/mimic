@@ -8,6 +8,9 @@ requests = "*"
 toml = "*"
 keras = "*"
 tensorflow = "*"
+selenium = "*"
+bs4 = "*"
+lxml = "*"
 
 [dev-packages]
 codecov = "*"
