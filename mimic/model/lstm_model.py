@@ -15,6 +15,7 @@ import numpy as np
 import string
 import os
 from random import randint
+import logging
 
 
 class LSTMModel(Model):
@@ -108,8 +109,7 @@ class LSTMModel(Model):
             self.model = load_model(filepath)
             return True
         except (ImportError, ValueError) as e:
-            # TODO: Logging here
-            print(e)
+            logging.error(e)
             return False
 
     def save_trained_model(self, dir_path, filename):
