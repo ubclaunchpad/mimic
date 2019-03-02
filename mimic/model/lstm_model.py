@@ -76,7 +76,6 @@ class LSTMModel(Model):
         self.model = model
         logging.info('Tokenization successfully completed')
 
-
     def predict(self):
         """Generate a sequence of text based on prior training."""
         logging.info('Generating text')
