@@ -16,28 +16,25 @@ import os
 from random import randint
 
 
-# Number of words in each training sequence
-SEQ_LEN = 100
-# Number of words to generate
-NUM_OUTPUT_WORDS = 50
-
-
 class LSTMModel(Model):
     """ML Model for Text Prediction using the LSTM Model with Keras."""
 
-    def __init__(self):
+    def __init__(self, sequenceLength, predictionLength):
         """Initialize the LSTM Model."""
         self.tokenizer = Tokenizer()
+        self.seqLen = sequenceLength
+        self.predLen = predictionLength
 
     def learn(self, text):
         """Use input text to train the LSTM model."""
         # Clean & verify text
         clean_txt = utils.clean_text(text)
+        txt_len = len(clean_txt)
         utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
-        corpus = list(clean_txt[0+i:SEQ_LEN+i] for i in range(0,
-                                                              len(clean_txt),
-                                                              SEQ_LEN))
+        corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(0,
+                                                                  txt_len,
+                                                                  self.seqLen))
         # Tokenization of corpus
         self.tokenizer.fit_on_texts(corpus)
         total_words = len(self.tokenizer.word_index) + 1
@@ -78,7 +75,7 @@ class LSTMModel(Model):
         seed_text = split_input_text[randint(0, len(split_input_text)-1)]
 
         # Numerical input here is the # of words to generate
-        for _ in range(NUM_OUTPUT_WORDS):
+        for _ in range(self.predLen):
             token_list = self.tokenizer.texts_to_sequences([seed_text])[0]
             token_list = pad_sequences([token_list],
                                        maxlen=self.max_sequence_len-1,
