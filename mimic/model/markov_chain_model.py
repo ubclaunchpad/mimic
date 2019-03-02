@@ -10,7 +10,7 @@ import pickle
 class MarkovChainModel(Model):
     """A type of model."""
 
-    def __init__(self, stateLength):
+    def __init__(self, stateLength, predictionLength):
         """
         Constructor.
 
@@ -20,6 +20,7 @@ class MarkovChainModel(Model):
         self.order = stateLength
         self.groupSize = stateLength + 1
         self.dict = defaultdict(list)
+        self.predictionLength = predictionLength
         self.data = None
         self.dump = None
         logging.info('Markov Model instantiated')
@@ -44,7 +45,7 @@ class MarkovChainModel(Model):
         logging.info('--------')
         self.dump = (self.order, self.dict, self.data)
 
-    def predict(self, length):
+    def predict(self):
         """
         Predict method.
 
@@ -55,7 +56,7 @@ class MarkovChainModel(Model):
         index = random.randint(0, len(self.data) - self.order)
         result = self.data[index: index + self.order]
 
-        for _ in range(length):
+        for _ in range(self.predictionLength):
             state = tuple(result[len(result) - self.order:])
             next = random.choice(self.dict[state])
             result.append(next)
