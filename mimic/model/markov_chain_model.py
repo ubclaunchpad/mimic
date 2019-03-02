@@ -44,7 +44,6 @@ class MarkovChainModel(Model):
         logging.info('--------')
         self.dump = (self.order, self.dict, self.data)
 
-
     def predict(self, length):
         """
         Predict method.
