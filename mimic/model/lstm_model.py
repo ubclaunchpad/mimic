@@ -16,28 +16,29 @@ import os
 from random import randint
 
 
-# Number of words in each training sequence
-SEQ_LEN = 100
-# Number of words to generate
-NUM_OUTPUT_WORDS = 50
-
-
 class LSTMModel(Model):
     """ML Model for Text Prediction using the LSTM Model with Keras."""
 
-    def __init__(self):
+    def __init__(self, sequenceLength, predictionLength):
         """Initialize the LSTM Model."""
         self.tokenizer = Tokenizer()
+        self.seqLen = sequenceLength
+        self.predLen = predictionLength
+        logging.info('Initialized LSTM Model')
 
     def learn(self, text):
         """Use input text to train the LSTM model."""
         # Clean & verify text
+        logging.info('Cleaning and verifying text')
+
         clean_txt = utils.clean_text(text)
+        txt_len = len(clean_txt)
         utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
-        corpus = list(clean_txt[0+i:SEQ_LEN+i] for i in range(0,
-                                                              len(clean_txt),
-                                                              SEQ_LEN))
+        logging.info('Tokenizing Corpus')
+        corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(0,
+                                                                  txt_len,
+                                                                  self.seqLen))
         # Tokenization of corpus
         self.tokenizer.fit_on_texts(corpus)
         total_words = len(self.tokenizer.word_index) + 1
@@ -70,15 +71,17 @@ class LSTMModel(Model):
 
         self.max_sequence_len = max_sequence_len
         self.model = model
+        logging.info('Tokenization successfully completed')
 
     def predict(self):
         """Generate a sequence of text based on prior training."""
+        logging.info('Generating text')
         split_input_text = self.cleaned_input_text.split()
         # Picks a random word from the input text as seed
         seed_text = split_input_text[randint(0, len(split_input_text)-1)]
 
         # Numerical input here is the # of words to generate
-        for _ in range(NUM_OUTPUT_WORDS):
+        for _ in range(self.predLen):
             token_list = self.tokenizer.texts_to_sequences([seed_text])[0]
             token_list = pad_sequences([token_list],
                                        maxlen=self.max_sequence_len-1,
@@ -90,4 +93,5 @@ class LSTMModel(Model):
                     output_word = word
                     break
             seed_text += " "+output_word
+        logging.info('Text successfully generated.')
         return seed_text
