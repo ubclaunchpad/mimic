@@ -94,7 +94,7 @@ class GRUModel(Model):
         start_string = "ROMEO: "    # Start string to begin sequence prediction
         num_generate = 1000         # Number of characters to generate
         text_generated = []         # Empty string to store our results
-        temperature = 1.0           # temperature : low = more predictable, high = more surprising
+        temperature = 1.0           # temperature : low = more predictable text, high = more surprising text
 
         # Converting our start string to numbers (vectorizing)
         input_eval = [self.char2idx[s] for s in start_string]
