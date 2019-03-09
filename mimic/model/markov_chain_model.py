@@ -65,19 +65,19 @@ class MarkovChainModel(Model):
 
     def save(self, path, filename):
         """Save model as a pickle file."""
-        outputPath = os.path.join(path + filename + ".pickle")
-        pickle_out = open(outputPath, "wb")
+        output_path = os.path.join(path + filename + ".pickle")
+        pickle_out = open(output_path, "wb")
         pickle.dump(self.dump, pickle_out)
         pickle_out.close()
 
     def load(self, path, filename):
         """Load pickle file and reassigns values."""
         try:
-            inputPath = os.path.join(path + filename + ".pickle")
-            pickle_in = open(inputPath, "rb")
-            importDump = pickle.load(pickle_in)
+            input_path = os.path.join(path + filename + ".pickle")
+            pickle_in = open(input_path, "rb")
+            import_dump = pickle.load(pickle_in)
             pickle_in.close()
-            self.order, self.dict, self.data = importDump
+            self.order, self.dict, self.data = import_dump
             self.groupSize = self.order + 1
 
         except (ImportError, ValueError) as e:
