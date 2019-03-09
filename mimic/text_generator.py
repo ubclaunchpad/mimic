@@ -17,7 +17,7 @@ class TextGenerator:
         self.model = model
 
     def train_from_zip(self, zip_file_path):
-        """Loads the zip and initiates training by the model"""
+        """Load the zip and initiate training by the model."""
         text = load_text_zip(zip_file_path)
         model.learn(text)
 
