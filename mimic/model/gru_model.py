@@ -1,11 +1,13 @@
 """GRU model class."""
 
 from model import Model
+# import mimic.util as utils
 import time
 import os
 import sys
 
 import numpy as np
+import random
 import tensorflow as tf
 tf.enable_eager_execution()
 
@@ -17,12 +19,6 @@ from tensorflow.keras.layers import Dense
 # import ssl
 # ssl._create_default_https_context = ssl._create_unverified_context
 
-if tf.test.is_gpu_available():
-    rnn = tf.keras.layers.CuDNNGRU
-else:
-    import functools
-    rnn = functools.partial(tf.keras.layers.GRU, recurrent_activation='sigmoid')
-
 
 class GRUModel(Model):
     """Model for text generation using GRU RNN machine learning."""
@@ -31,16 +27,19 @@ class GRUModel(Model):
         self.vocab = None
         self.char2idx = None
         self.idx2char = None
+        self.text = None
 
     def learn(self, text):
         """Initialize a GRU RNN model and train it using a given text."""
         seq_length = 100        # Number of chars processed in a sequence
         embedding_dim = 256     # Embedding dimension
         rnn_units = 1024        # Number of rnn units
-        batch_size = 1          # Batch size
-        epochs = 5              # Number of training cycles (epochs)
+        batch_size = 64          # Batch size
+        epochs = 1              # Number of training cycles (epochs)
         buffer_size = 10000     # Buffer used in shuffling training order
 
+        # text = utils.clean_text(text)
+        self.text = text
         self.vocab = sorted(set(text))
         self.char2idx = {u: i for i, u in enumerate(self.vocab)}
         self.idx2char = np.array(self.vocab)
@@ -71,7 +70,7 @@ class GRUModel(Model):
         )
 
         # Directory where the checkpoints will be saved
-        checkpoint_dir = "../../data/training_checkpoints"
+        checkpoint_dir = "./training_checkpoints"
         # Name of the checkpoint files
         checkpoint_prefix = os.path.join(checkpoint_dir, "cpkt_{epoch}")
 
@@ -84,20 +83,34 @@ class GRUModel(Model):
         history = self.model.fit(dataset.repeat(), epochs=epochs, steps_per_epoch=steps_per_epoch,
                                  callbacks=[checkpoint_callback])
 
-        # self.model = self.build_model(vocab_size, embedding_dim, rnn_units, batch_size=1)
-        # self.model.load_weights(tf.train.latest_checkpoint(checkpoint_dir))
-        # self.model.build(tf.TensorShape([1, None]))
-        # model.summary()
+    def load(self, text):
+        embedding_dim = 256  # Embedding dimension
+        rnn_units = 1024  # Number of rnn units
+        batch_size = 1  # Batch size
+        checkpoint_dir = "/Users/irvinodjuana/PycharmProjects/mimic/mimic/model/training_checkpoints"
+
+        self.text = text
+        self.vocab = sorted(set(text))
+        self.char2idx = {u: i for i, u in enumerate(self.vocab)}
+        self.idx2char = np.array(self.vocab)
+        vocab_size = len(self.vocab)
+
+        self.model = self.build_model(vocab_size, embedding_dim, rnn_units, batch_size=batch_size)
+        self.model.load_weights(tf.train.latest_checkpoint(checkpoint_dir))
+        self.model.build(tf.TensorShape([1, None]))
+        # self.model.summary()
 
     def predict(self):
         """Generate text using a learned GRU model"""
-        start_string = "ROMEO: "    # Start string to begin sequence prediction
-        num_generate = 1000         # Number of characters to generate
+        num_generate = 3000         # Number of characters to generate
         text_generated = []         # Empty string to store our results
-        temperature = 1.0           # temperature : low = more predictable text, high = more surprising text
+        temperature = 0.7         # temperature : low = more predictable text, high = more surprising text
+
+        all_words = self.text.split()
+        seed_word = all_words[random.randint(0, len(all_words) - 1)]
 
         # Converting our start string to numbers (vectorizing)
-        input_eval = [self.char2idx[s] for s in start_string]
+        input_eval = [self.char2idx[s] for s in seed_word]
         input_eval = tf.expand_dims(input_eval, 0)
 
         # Here batch size = 1
@@ -116,7 +129,7 @@ class GRUModel(Model):
             input_eval = tf.expand_dims([predicted_id], 0)
             text_generated.append(self.idx2char[predicted_id])
 
-        return start_string + ''.join(text_generated)
+        return seed_word + ''.join(text_generated)
 
     @staticmethod
     def split_input_target(chunk):
@@ -126,15 +139,17 @@ class GRUModel(Model):
 
     @staticmethod
     def build_model(vocab_size, embedding_dim, rnn_units, batch_size):
-        model = Sequential([
-            Embedding(vocab_size, embedding_dim,
-                                      batch_input_shape=[batch_size, None]),
-            rnn(rnn_units,
-                return_sequences=True,
-                recurrent_initializer='glorot_uniform',
-                stateful=True),
-            Dense(vocab_size)
-        ])
+        if tf.test.is_gpu_available():
+            rnn = tf.keras.layers.CuDNNGRU
+        else:
+            import functools
+            rnn = functools.partial(GRU, recurrent_activation='sigmoid')
+
+        model = Sequential()
+        model.add(Embedding(vocab_size, embedding_dim, batch_input_shape=[batch_size, None]))
+        model.add(rnn(rnn_units, return_sequences=True, recurrent_initializer='glorot_uniform', stateful=True))
+        model.add(Dense(vocab_size))
+
         return model
 
     @staticmethod
@@ -147,7 +162,8 @@ def main():
     text = open(path_to_file, 'rb').read().decode(encoding='utf-8')
 
     gru_model = GRUModel()
-    gru_model.learn(text)
+    # gru_model.learn(text)
+    gru_model.load(text)
     print(gru_model.predict())
 
 
