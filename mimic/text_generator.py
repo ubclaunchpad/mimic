@@ -1,8 +1,9 @@
 """Core text generator module."""
-from mimic.model.model import Model
+# from mimic.model.model import Model
+# from mimic.model.markov_chain_model import MarkovChainModel
+# from mimic.model.lstm_model import LSTMModel
 import zipfile
 import os
-
 
 class TextGenerator:
     """
@@ -28,8 +29,10 @@ class TextGenerator:
             text_string = " ".join(files)
             archive.extractall(dir_name)
 
-        return text_string
+        self.data = text_string
 
     def generate_text(self):
         """Generate textual output based on training data."""
-        raise NotImplementedError
+
+        self.model.learn(self.data)
+        print(self.model.predict())
