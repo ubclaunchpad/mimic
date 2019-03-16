@@ -25,6 +25,7 @@ class PretrainedModelFactory:
 
     def generate_LSTM_inclass_variables(self, text):
         """Generate in-class variables for LSTM predict method."""
+
         logging.info("Generating LSTM inclass variables")
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
@@ -86,7 +87,7 @@ class PretrainedModelFactory:
         """Use a pretrained Markov Chain model with Shakespeare text."""
         logging.info("Creating pretrained Markov Chain Shakespeare text"
                      "generator")
-                     
+
         self.model = TextGenerator(MarkovChainModel())
         self.model.load_pretrained_model(os.path.join(
                                  self.pretrained_models_path,
