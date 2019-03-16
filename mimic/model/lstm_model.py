@@ -101,7 +101,8 @@ class LSTMModel(Model):
 
     def load_pretrained_model(self, filepath):
         """
-        Loads a pretrained LSTM model from a filepath.
+        Load a pretrained LSTM model from a filepath.
+
         Loads trained LSTM and returns true if loaded
         or false if an error occured.
         """
