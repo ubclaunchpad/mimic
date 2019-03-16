@@ -26,7 +26,7 @@ class PretrainedModelFactory:
     def generate_LSTM_inclass_variables(self, text):
         """Generate in-class variables for LSTM predict method."""
         logging.info("Generating LSTM inclass variables")
-        
+
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
         utils.verify_text(clean_txt)
