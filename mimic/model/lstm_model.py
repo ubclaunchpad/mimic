@@ -7,6 +7,7 @@ from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
 from keras.callbacks import EarlyStopping
 from keras.models import Sequential
+from keras.models import load_model
 import keras.utils as ku
 import tensorflow as tf
 
@@ -96,3 +97,23 @@ class LSTMModel(Model):
             seed_text += " "+output_word
         logging.info('Text successfully generated.')
         return seed_text
+
+    def load_pretrained_model(self, filepath):
+        """
+        Load a pretrained LSTM model from a filepath.
+
+        Loads trained LSTM and returns true if loaded
+        or false if an error occured.
+        """
+        try:
+            self.model = load_model(filepath)
+            return True
+        except (ImportError, ValueError) as e:
+            logging.error(e)
+            return False
+
+    def save_trained_model(self, dir_path, filename):
+        """Save a pretrained LSTM model to a file and return the file path."""
+        filepath = os.path.join(dir_path, filename + ".h5")
+        self.model.save(filepath)
+        return filepath
