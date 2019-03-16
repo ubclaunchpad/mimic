@@ -3,6 +3,7 @@ from mimic.model.model import Model
 from mimic.model.markov_chain_model import MarkovChainModel
 from mimic.model.lstm_model import LSTMModel
 from mimic.text_generator import TextGenerator
+import logging
 
 # Number of words to "learn" from
 DEFAULT_MARKOV_STATE_LENGTH = 5

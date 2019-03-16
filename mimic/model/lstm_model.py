@@ -14,6 +14,7 @@ import numpy as np
 import string
 import os
 from random import randint
+import logging
 
 
 class LSTMModel(Model):
