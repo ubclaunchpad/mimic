@@ -5,6 +5,7 @@
 import zipfile
 import os
 
+
 class TextGenerator:
     """
     Core text generation class.
@@ -29,10 +30,21 @@ class TextGenerator:
             text_string = " ".join(files)
             archive.extractall(dir_name)
 
-        self.data = text_string
+        return text_string
+
+    def train_from_zip(self, zip_file_path):
+        """Load the zip and initiate training by the model."""
+        text = self.load_text_zip(zip_file_path)
+        self.model.learn(text)
+
+    def load_pretrained_model(self, filepath):
+        """Load the pretrained model."""
+        self.model.load_pretrained_model(filepath)
+
+    def save_trained_model(self, dir_path, filename):
+        """Save the trained model."""
+        self.model.save_trained_model(dir_path, filename)
 
     def generate_text(self):
         """Generate textual output based on training data."""
-
-        self.model.learn(self.data)
         print(self.model.predict())

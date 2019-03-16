@@ -7,6 +7,7 @@ from keras.layers import Embedding, LSTM, Dense, Dropout
 from keras.preprocessing.text import Tokenizer
 from keras.callbacks import EarlyStopping
 from keras.models import Sequential
+from keras.models import load_model
 import keras.utils as ku
 import tensorflow as tf
 
@@ -14,12 +15,13 @@ import numpy as np
 import string
 import os
 from random import randint
+import logging
 
 
 class LSTMModel(Model):
     """ML Model for Text Prediction using the LSTM Model with Keras."""
 
-    def __init__(self, sequenceLength, predictionLength):
+    def __init__(self, sequenceLength=100, predictionLength=50):
         """Initialize the LSTM Model."""
         self.tokenizer = Tokenizer()
         self.seqLen = sequenceLength
@@ -94,4 +96,24 @@ class LSTMModel(Model):
                     break
             seed_text += " "+output_word
         logging.info('Text successfully generated.')
+        logging.info('--------')
         return seed_text
+
+    def load_pretrained_model(self, filepath):
+        """
+        Loads a pretrained LSTM model from a filepath.
+        Loads trained LSTM and returns true if loaded
+        or false if an error occured.
+        """
+        try:
+            self.model = load_model(filepath)
+            return True
+        except (ImportError, ValueError) as e:
+            logging.error(e)
+            return False
+
+    def save_trained_model(self, dir_path, filename):
+        """Save a pretrained LSTM model to a file and return the file path."""
+        filepath = os.path.join(dir_path, filename + ".h5")
+        self.model.save(filepath)
+        return filepath

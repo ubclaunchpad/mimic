@@ -4,13 +4,14 @@ import random
 from mimic.model.model import Model
 from collections import defaultdict
 import logging
+import os
 import pickle
 
 
 class MarkovChainModel(Model):
     """A type of model."""
 
-    def __init__(self, stateLength, predictionLength):
+    def __init__(self, stateLength=5, predictionLength=50):
         """
         Constructor.
 
@@ -42,7 +43,6 @@ class MarkovChainModel(Model):
             self.dict[key].append(value)
 
         logging.info('Finished Learning')
-        logging.info('--------')
         self.dump = (self.order, self.dict, self.data)
 
     def predict(self):
@@ -61,19 +61,20 @@ class MarkovChainModel(Model):
             next = random.choice(self.dict[state])
             result.append(next)
 
+        logging.info('Text successfully generated.')
+        logging.info('--------')
         return " ".join(result[self.order:])
 
-    def save(self, path, filename):
+    def save_trained_model(self, path, filename):
         """Save model as a pickle file."""
-        output_path = os.path.join(path + filename + ".pickle")
+        output_path = os.path.join(path, filename + ".pickle")
         pickle_out = open(output_path, "wb")
         pickle.dump(self.dump, pickle_out)
         pickle_out.close()
 
-    def load(self, path, filename):
+    def load_pretrained_model(self, input_path):
         """Load pickle file and reassigns values."""
         try:
-            input_path = os.path.join(path + filename + ".pickle")
             pickle_in = open(input_path, "rb")
             import_dump = pickle.load(pickle_in)
             pickle_in.close()
