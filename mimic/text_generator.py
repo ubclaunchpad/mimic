@@ -47,4 +47,4 @@ class TextGenerator:
 
     def generate_text(self):
         """Generate textual output based on training data."""
-        print(self.model.predict())
+        return self.model.predict()
