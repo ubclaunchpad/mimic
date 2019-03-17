@@ -31,20 +31,21 @@ class GRUModel(Model):
 
     def learn(self, text):
         """Initialize a GRU RNN model and train it using a given text."""
-        seq_length = 100        # Number of chars processed in a sequence
-        embedding_dim = 256     # Embedding dimension
-        rnn_units = 1024        # Number of rnn units
-        batch_size = 64          # Batch size
-        epochs = 1              # Number of training cycles (epochs)
-        buffer_size = 10000     # Buffer used in shuffling training order
+        seq_length = 100            # Number of chars processed in a sequence
+        embedding_dim = 256         # Embedding dimension
+        rnn_units = 1024            # Number of rnn units
+        batch_size = 64             # Batch size
+        epochs = 1                  # Number of training cycles (epochs)
+        buffer_size = 10000         # Buffer used in shuffling training order
+        save_checkpoints = False
 
         # text = utils.clean_text(text)
         self.text = text
         self.vocab = sorted(set(text))
         self.char2idx = {u: i for i, u in enumerate(self.vocab)}
         self.idx2char = np.array(self.vocab)
-        text_as_int = np.array([self.char2idx[c] for c in text])
-        examples_per_epoch = len(text) // seq_length
+        text_as_int = np.array([self.char2idx[c] for c in self.text])
+        examples_per_epoch = len(self.text) // seq_length
 
         # Create training examples / targets
         char_dataset = tf.data.Dataset.from_tensor_slices(text_as_int)
@@ -57,7 +58,7 @@ class GRUModel(Model):
         # Length of vocabulary in chars
         vocab_size = len(self.vocab)
 
-        # Build model outline
+        # Build training model outline
         self.model = self.build_model(vocab_size=vocab_size,
                                       embedding_dim=embedding_dim,
                                       rnn_units=rnn_units,
@@ -69,25 +70,36 @@ class GRUModel(Model):
             loss=self.loss
         )
 
-        # Directory where the checkpoints will be saved
-        checkpoint_dir = "./training_checkpoints"
-        # Name of the checkpoint files
-        checkpoint_prefix = os.path.join(checkpoint_dir, "cpkt_{epoch}")
+        if save_checkpoints:
+            # Directory where the checkpoints will be saved
+            checkpoint_dir = "./training_checkpoints"
+            # Name of the checkpoint files
+            checkpoint_prefix = os.path.join(checkpoint_dir, "cpkt_{epoch}")
 
-        checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
-            filepath=checkpoint_prefix,
-            save_weights_only=True
-        )
+            checkpoint_callback = tf.keras.callbacks.ModelCheckpoint(
+                filepath=checkpoint_prefix,
+                save_weights_only=True
+            )
 
-        # Actual training and fitting of model
-        history = self.model.fit(dataset.repeat(), epochs=epochs, steps_per_epoch=steps_per_epoch,
-                                 callbacks=[checkpoint_callback])
+            # Actual training and fitting of model
+            self.model.fit(dataset.repeat(), epochs=epochs, steps_per_epoch=steps_per_epoch,
+                           callbacks=[checkpoint_callback])
+        else:
+            self.model.fit(dataset.repeat(), epochs=epochs, steps_per_epoch=steps_per_epoch)
+
+        # Rebuild model for prediction with same weights but new batch size = 1
+        old_weights = self.model.get_weights()
+        print(type(old_weights))
+        self.model = self.build_model(vocab_size=vocab_size, embedding_dim=embedding_dim,
+                                      rnn_units=rnn_units, batch_size=1)
+        self.model.set_weights(old_weights)
 
     def load(self, text):
+        #TODO: Implement properly
         embedding_dim = 256  # Embedding dimension
         rnn_units = 1024  # Number of rnn units
         batch_size = 1  # Batch size
-        checkpoint_dir = "/Users/irvinodjuana/PycharmProjects/mimic/mimic/model/training_checkpoints"
+        checkpoint_dir = "./training_checkpoints"
 
         self.text = text
         self.vocab = sorted(set(text))
@@ -155,17 +167,3 @@ class GRUModel(Model):
     @staticmethod
     def loss(labels, logits):
         return tf.keras.losses.sparse_categorical_crossentropy(labels, logits, from_logits=True)
-
-
-def main():
-    path_to_file = tf.keras.utils.get_file('shakespeare.txt', 'https://storage.googleapis.com/download.tensorflow.org/data/shakespeare.txt')
-    text = open(path_to_file, 'rb').read().decode(encoding='utf-8')
-
-    gru_model = GRUModel()
-    # gru_model.learn(text)
-    gru_model.load(text)
-    print(gru_model.predict())
-
-
-if __name__ == "__main__":
-    main()
