@@ -94,7 +94,6 @@ class GRUModel(Model):
 
         # Rebuild model for prediction with same weights but new batch size = 1
         old_weights = self.model.get_weights()
-        print(type(old_weights))
         self.model = self.build_model(vocab_size=vocab_size,
                                       embedding_dim=embedding_dim,
                                       rnn_units=rnn_units,
