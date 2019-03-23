@@ -11,6 +11,7 @@ from numpy import array
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
+import logging
 
 
 class TranslationModel(Model):
@@ -19,18 +20,26 @@ class TranslationModel(Model):
     def __init__(self, n_units=256):
         """Initialize the model with the number of cells in each LSTM layer."""
         self.n_units = n_units
+        logging.info('Translation Model instantiated')
 
     def learn(self, bilingual_text):
         """Trains the model."""
+        logging.info('Learning...')
         # prepare source language tokenizer
+        if bilingual_text.shape[1] != 2:
+            raise ValueError("Training dataset should have 2 columns only.")
         src_tokenizer = self._create_tokenizer(bilingual_text[:, 0])
         src_vocab_size = len(src_tokenizer.word_index) + 1
         src_length = self._max_length(bilingual_text[:, 0])
+        logging.info('Source Language Vocabulary Size: %d' % src_vocab_size)
+        logging.info('Source Language Max Length: %d' % src_length)
 
         # prepare target language tokenizer
         tar_tokenizer = self._create_tokenizer(bilingual_text[:, 1])
         tar_vocab_size = len(tar_tokenizer.word_index) + 1
         tar_length = self._max_length(bilingual_text[:, 1])
+        logging.info('Target Language Vocabulary Size: %d' % tar_vocab_size)
+        logging.info('Target Language Max Length: %d' % tar_length)
 
         # prepare training data
         trainX = self._encode_sequences(src_tokenizer, src_length,
@@ -54,9 +63,12 @@ class TranslationModel(Model):
 
         self.model = model
         self.tokenizer = tar_tokenizer
+        logging.info('Finished Learning')
+        logging.info('--------')
 
     def predict(self, source):
         """Generate translation of a single phrase."""
+        logging.info('Predicting')
         prediction = self.model.predict(source, verbose=0)[0]
         integers = [argmax(vector) for vector in prediction]
         target = list()
