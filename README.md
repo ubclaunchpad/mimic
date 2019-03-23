@@ -39,3 +39,19 @@ this can be run with:
 ```bash
 ./scripts/build_check.sh
 ```
+
+## Server
+
+To start the server:
+
+```
+$ export FLASK_APP=index.py
+$ flask run
+  Running on http://127.0.0.1:5000/
+```
+
+if on windows powershell, export using:
+
+```
+PS C:\path\to\app> $env:FLASK_APP = "index.py"
+```
