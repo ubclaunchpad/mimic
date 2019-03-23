@@ -1,4 +1,7 @@
 """Model superclass."""
+import os
+import logging
+from keras.models import load_model
 
 
 class Model:
@@ -26,8 +29,15 @@ class Model:
 
         Loads model and return true if loaded or false if an error occured.
         """
-        raise NotImplementedError
+        try:
+            self.model = load_model(filepath)
+            return True
+        except (ImportError, ValueError) as e:
+            logging.error(e)
+            return False
 
     def save_trained_model(self, dir_path, filename):
         """Save the trained model to a file and return file path."""
-        raise NotImplementedError
+        filepath = os.path.join(dir_path, filename + ".h5")
+        self.model.save(filepath)
+        return filepath
