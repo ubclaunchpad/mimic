@@ -2,10 +2,20 @@
 from flask import Flask
 from mimic.text_generator import TextGenerator
 from mimic.text_generator_factory import TextGeneratorFactory
+from flask import request
+import json
 app = Flask(__name__)
 
 
-@app.route('/<model>/<string_length>', methods=['GET'])
-def getText(model, string_length):
-    """Prepare a text file for consumption by the model."""
-    return 'We cant really do this until we have a pretrained model'
+@app.route('/test-endpoint', methods=['GET'])
+def testEndpoint():
+    """Test endpoint."""
+    return "it's up!"
+
+@app.route('/test-model', methods=['GET'])
+def getText():
+    """Use pretrained model to generate text by the requested parameters."""
+    data = json.loads(request.data)
+    stringLength = data["stringLength"]
+    seedText = data["seedText"]
+    return "deferring this until we have pretrained models!!!"
