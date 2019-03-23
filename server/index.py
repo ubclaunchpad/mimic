@@ -12,6 +12,7 @@ def testEndpoint():
     """Test endpoint."""
     return "it's up!"
 
+
 @app.route('/test-model', methods=['GET'])
 def getText():
     """Use pretrained model to generate text by the requested parameters."""
