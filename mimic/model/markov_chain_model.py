@@ -55,12 +55,12 @@ class MarkovChainModel(Model):
         logging.info('Predicting')
 
         self.predictionLength = pred_len
-        if seed_text == None:
+        if seed_text is None:
             index = random.randint(0, len(self.data) - self.order)
         else:
             try:
                 index = self.data.index(seed_text)
-            except:
+            except Exception:
                 index = random.randint(0, len(self.data) - self.order)
 
         result = self.data[index: index + self.order]

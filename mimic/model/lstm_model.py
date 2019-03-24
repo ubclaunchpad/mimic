@@ -32,7 +32,7 @@ class LSTMModel(Model):
         """Use input text to train the LSTM model."""
         # Clean & verify text
         logging.info('Cleaning and verifying text')
-        text = text[:10000]
+        text = text[:100000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
         utils.verify_text(clean_txt)
@@ -81,7 +81,7 @@ class LSTMModel(Model):
         logging.info('Generating text')
 
         self.predLen = pred_len
-        if seed_text == None:
+        if seed_text is None:
             split_input_text = self.cleaned_input_text.split()
             # Picks a random word from the input text as seed
             seed_text = split_input_text[randint(0, len(split_input_text)-1)]
@@ -126,8 +126,7 @@ class LSTMModel(Model):
             for i in range(1, len(token_list)):
                 n_gram_sequence = token_list[:i+1]
                 input_sequences.append(n_gram_sequence)
-        self.max_sequence_len = max([len(x) for x in
-                                                 input_sequences])
+        self.max_sequence_len = max([len(x) for x in input_sequences])
 
         try:
             self.model = load_model(filepath)
