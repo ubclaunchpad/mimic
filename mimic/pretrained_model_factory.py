@@ -16,9 +16,6 @@ class PretrainedModelFactory:
 
     def __init__(self):
         """Initialize a TextGenerator with the given pretrained model type."""
-        logging.basicConfig(format='%(asctime)s %(message)s',
-                            filename='textgenerator.log',
-                            level=logging.DEBUG)
         self.data_path = os.path.join(os.getcwd(), "data")
         self.pretrained_models_path = os.path.join(os.getcwd(), "data",
                                                    "pretrained_models")

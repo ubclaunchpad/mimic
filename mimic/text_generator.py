@@ -1,7 +1,7 @@
 """Core text generator module."""
-# from mimic.model.model import Model
-# from mimic.model.markov_chain_model import MarkovChainModel
-# from mimic.model.lstm_model import LSTMModel
+from mimic.model.model import Model
+from mimic.model.markov_chain_model import MarkovChainModel
+from mimic.model.lstm_model import LSTMModel
 import zipfile
 import os
 
