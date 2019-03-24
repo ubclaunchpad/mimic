@@ -9,7 +9,7 @@ def clean_text(raw_text):
     clean_txt = raw_text.encode("utf8").decode("ascii", "ignore").lower()
     # Replace all punctuation with a space
     punctuation_regex = re.compile('[%s]' % re.escape(string.punctuation))
-    clean_txt = punctuation_regex.sub(' ', clean_txt)
+    clean_txt = punctuation_regex.sub('', clean_txt)
     # Split cleaned string by whitespace
     clean_txt_arr = clean_txt.split()
     # Return array joined by a single space

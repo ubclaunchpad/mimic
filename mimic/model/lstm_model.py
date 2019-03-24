@@ -32,7 +32,7 @@ class LSTMModel(Model):
         """Use input text to train the LSTM model."""
         # Clean & verify text
         logging.info('Cleaning and verifying text')
-
+        text = text[:10000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
         utils.verify_text(clean_txt)
@@ -41,6 +41,7 @@ class LSTMModel(Model):
         corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(0,
                                                                   txt_len,
                                                                   self.seqLen))
+
         # Tokenization of corpus
         self.tokenizer.fit_on_texts(corpus)
         total_words = len(self.tokenizer.word_index) + 1
@@ -62,25 +63,28 @@ class LSTMModel(Model):
         input_len = max_sequence_len - 1
         model = Sequential()
         # Add Input Embedding Layer
-        model.add(Embedding(total_words, 10, input_length=input_len))
+        model.add(Embedding(total_words, 500, input_length=input_len))
         # Add Hidden Layer 1 - LSTM Layer
         model.add(LSTM(100))
         model.add(Dropout(0.1))
         # Add Output Layer
         model.add(Dense(total_words, activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam')
-        model.fit(predictors, label, epochs=100, verbose=5)
+        model.fit(predictors, label, epochs=20, verbose=5)
 
         self.max_sequence_len = max_sequence_len
         self.model = model
         logging.info('Tokenization successfully completed')
 
-    def predict(self):
+    def predict(self, seed_text, pred_len):
         """Generate a sequence of text based on prior training."""
         logging.info('Generating text')
-        split_input_text = self.cleaned_input_text.split()
-        # Picks a random word from the input text as seed
-        seed_text = split_input_text[randint(0, len(split_input_text)-1)]
+
+        self.predLen = pred_len
+        if seed_text == None:
+            split_input_text = self.cleaned_input_text.split()
+            # Picks a random word from the input text as seed
+            seed_text = split_input_text[randint(0, len(split_input_text)-1)]
 
         # Numerical input here is the # of words to generate
         for _ in range(self.predLen):
@@ -96,16 +100,35 @@ class LSTMModel(Model):
                     break
             seed_text += " "+output_word
         logging.info('Text successfully generated.')
-        logging.info('--------')
         return seed_text
 
-    def load_pretrained_model(self, filepath):
+    def load_pretrained_model(self, filepath, text):
         """
         Load a pretrained LSTM model from a filepath.
-
         Loads trained LSTM and returns true if loaded
         or false if an error occured.
         """
+        text = text[:100000]
+        clean_txt = utils.clean_text(text)
+        txt_len = len(clean_txt)
+        utils.verify_text(clean_txt)
+        self.cleaned_input_text = clean_txt
+
+        corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(
+                                                      0, txt_len,
+                                                      self.seqLen))
+        self.tokenizer.fit_on_texts(corpus)
+        total_words = len(self.tokenizer.word_index) + 1
+        input_sequences = []
+        for line in corpus:
+            token_list = self.tokenizer.texts_to_sequences(
+                                                             [line])[0]
+            for i in range(1, len(token_list)):
+                n_gram_sequence = token_list[:i+1]
+                input_sequences.append(n_gram_sequence)
+        self.max_sequence_len = max([len(x) for x in
+                                                 input_sequences])
+
         try:
             self.model = load_model(filepath)
             return True

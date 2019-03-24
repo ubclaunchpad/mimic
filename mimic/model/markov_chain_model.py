@@ -11,7 +11,7 @@ import pickle
 class MarkovChainModel(Model):
     """A type of model."""
 
-    def __init__(self, stateLength=5, predictionLength=50):
+    def __init__(self, stateLength=1, predictionLength=50):
         """
         Constructor.
 
@@ -45,7 +45,7 @@ class MarkovChainModel(Model):
         logging.info('Finished Learning')
         self.dump = (self.order, self.dict, self.data)
 
-    def predict(self):
+    def predict(self, seed_text, pred_len):
         """
         Predict method.
 
@@ -53,7 +53,16 @@ class MarkovChainModel(Model):
         sentence of specified length.
         """
         logging.info('Predicting')
-        index = random.randint(0, len(self.data) - self.order)
+
+        self.predictionLength = pred_len
+        if seed_text == None:
+            index = random.randint(0, len(self.data) - self.order)
+        else:
+            try:
+                index = self.data.index(seed_text)
+            except:
+                index = random.randint(0, len(self.data) - self.order)
+
         result = self.data[index: index + self.order]
 
         for _ in range(self.predictionLength):
@@ -63,7 +72,8 @@ class MarkovChainModel(Model):
 
         logging.info('Text successfully generated.')
         logging.info('--------')
-        return " ".join(result[self.order:])
+        return " ".join(result)
+        # return " ".join(result[self.order:])
 
     def save_trained_model(self, path, filename):
         """Save model as a pickle file."""
@@ -72,7 +82,7 @@ class MarkovChainModel(Model):
         pickle.dump(self.dump, pickle_out)
         pickle_out.close()
 
-    def load_pretrained_model(self, input_path):
+    def load_pretrained_model(self, input_path, text=None):
         """Load pickle file and reassigns values."""
         try:
             pickle_in = open(input_path, "rb")
