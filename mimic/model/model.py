@@ -19,3 +19,15 @@ class Model:
     def predict(self):
         """Generate output."""
         raise NotImplementedError
+
+    def load_pretrained_model(self, filepath):
+        """
+        Load a pretrained model file from a filepath.
+
+        Loads model and return true if loaded or false if an error occured.
+        """
+        raise NotImplementedError
+
+    def save_trained_model(self, dir_path, filename):
+        """Save the trained model to a file and return file path."""
+        raise NotImplementedError

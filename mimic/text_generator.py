@@ -18,6 +18,11 @@ class TextGenerator:
         """Initialize a TextGenerator with the given model type."""
         self.model = model
 
+    def train_from_zip(self, zip_file_path):
+        """Load the zip and initiate training by the model."""
+        text = load_text_zip(zip_file_path)
+        model.learn(text)
+
     def load_text_zip(self, zip_file_path):
         """Prepare a text file for consumption by the model."""
         files = []
@@ -28,7 +33,6 @@ class TextGenerator:
                     files.append(archive.read(name).decode('utf-8'))
             dir_name = os.path.dirname(zip_file_path)
             text_string = " ".join(files)
-            archive.extractall(dir_name)
         return text_string
 
     def train_from_zip(self, zip_file_path):
