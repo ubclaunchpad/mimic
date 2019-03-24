@@ -102,7 +102,6 @@ class LSTMModel(Model):
         logging.info('Text successfully generated.')
         return seed_text
 
-<<<<<<< HEAD
     def load_pretrained_model(self, filepath, text):
         """
         Load a pretrained LSTM model from a filepath.
@@ -129,15 +128,6 @@ class LSTMModel(Model):
                 input_sequences.append(n_gram_sequence)
         self.max_sequence_len = max([len(x) for x in input_sequences])
 
-=======
-    def load_pretrained_model(self, filepath):
-        """
-        Load a pretrained LSTM model from a filepath.
-
-        Loads trained LSTM and returns true if loaded
-        or false if an error occured.
-        """
->>>>>>> 48f8254d6f4acf006bf12bfd5c2f01c5984ba2fd
         try:
             self.model = load_model(filepath)
             return True
