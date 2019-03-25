@@ -35,7 +35,7 @@ class LSTMModel(Model):
         text = text[:100000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
-        utils.verify_text(clean_txt)
+        # utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
         logging.info('Tokenizing Corpus')
         corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(0,
@@ -112,7 +112,7 @@ class LSTMModel(Model):
         text = text[:100000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
-        utils.verify_text(clean_txt)
+        # utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
 
         corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(
