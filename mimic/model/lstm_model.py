@@ -32,7 +32,7 @@ class LSTMModel(Model):
         """Use input text to train the LSTM model."""
         # Clean & verify text
         logging.info('Cleaning and verifying text')
-        text = text[:100000]
+        text = text[:150000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
         # utils.verify_text(clean_txt)
@@ -109,7 +109,7 @@ class LSTMModel(Model):
         Loads trained LSTM and returns true if loaded
         or false if an error occured.
         """
-        text = text[:100000]
+        text = text[:150000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
         # utils.verify_text(clean_txt)
