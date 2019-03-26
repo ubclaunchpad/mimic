@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 @app.route('/status', methods=['GET'])
 def status():
-    """status endpoint."""
+    """Status endpoint."""
     return "it's up!"
 
 
