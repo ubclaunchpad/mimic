@@ -104,3 +104,18 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# React
+frontend/node_modules
+frontend/.pnp
+.pnp.js
+frontend/coverage
+frontend/build
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
