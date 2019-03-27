@@ -32,10 +32,10 @@ class LSTMModel(Model):
         """Use input text to train the LSTM model."""
         # Clean & verify text
         logging.info('Cleaning and verifying text')
-        text = text[:150000]
+        text = text[:200000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
-        # utils.verify_text(clean_txt)
+        utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
         logging.info('Tokenizing Corpus')
         corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(0,
@@ -63,14 +63,14 @@ class LSTMModel(Model):
         input_len = max_sequence_len - 1
         model = Sequential()
         # Add Input Embedding Layer
-        model.add(Embedding(total_words, 500, input_length=input_len))
+        model.add(Embedding(total_words, 1000, input_length=input_len))
         # Add Hidden Layer 1 - LSTM Layer
-        model.add(LSTM(100))
+        model.add(LSTM(200))
         model.add(Dropout(0.1))
         # Add Output Layer
         model.add(Dense(total_words, activation='softmax'))
         model.compile(loss='categorical_crossentropy', optimizer='adam')
-        model.fit(predictors, label, epochs=20, verbose=5)
+        model.fit(predictors, label, epochs=100, verbose=5)
 
         self.max_sequence_len = max_sequence_len
         self.model = model
@@ -92,7 +92,9 @@ class LSTMModel(Model):
             token_list = pad_sequences([token_list],
                                        maxlen=self.max_sequence_len-1,
                                        padding='pre')
-            predicted = self.model.predict_classes(token_list, verbose=0)
+            weights = self.model.predict_proba(token_list, verbose=0)
+            weights = np.array(weights).flatten()
+            predicted = np.random.choice(np.arange(len(weights)), p=weights)
             output_word = ""
             for word, index in self.tokenizer.word_index.items():
                 if index == predicted:
@@ -109,21 +111,21 @@ class LSTMModel(Model):
         Loads trained LSTM and returns true if loaded
         or false if an error occured.
         """
-        text = text[:150000]
+        # Training used subset of text; the following embedding parameter
+        # definitions should match the training corpus size
+        text = text[:200000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
-        # utils.verify_text(clean_txt)
+        utils.verify_text(clean_txt)
         self.cleaned_input_text = clean_txt
 
         corpus = list(clean_txt[0+i:self.seqLen+i] for i in range(
-                                                      0, txt_len,
-                                                      self.seqLen))
+                                                    0, txt_len, self.seqLen))
         self.tokenizer.fit_on_texts(corpus)
         total_words = len(self.tokenizer.word_index) + 1
         input_sequences = []
         for line in corpus:
-            token_list = self.tokenizer.texts_to_sequences(
-                                                             [line])[0]
+            token_list = self.tokenizer.texts_to_sequences([line])[0]
             for i in range(1, len(token_list)):
                 n_gram_sequence = token_list[:i+1]
                 input_sequences.append(n_gram_sequence)

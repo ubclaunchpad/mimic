@@ -20,5 +20,4 @@ def verify_text(clean_text):
     """Verify that the text is suitable for ML."""
     if len(clean_text.split()) < 20000:
         # TODO should we make a custom error class?
-        print(len(clean_text.split()))
         raise ValueError("Input corpus too short")

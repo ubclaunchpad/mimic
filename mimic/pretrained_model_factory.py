@@ -68,27 +68,3 @@ class PretrainedModelFactory:
                                  self.pretrained_models_path,
                                  "trained_markov_model_shakespeare.pickle"))
         return self.model
-
-    # def generate_LSTM_inclass_variables(self, text):
-    #     """Generate in-class variables for LSTM predict method."""
-    #     logging.info("Generating LSTM inclass variables")
-    #     text = text[:20000]
-    #     clean_txt = utils.clean_text(text)
-    #     txt_len = len(clean_txt)
-    #     utils.verify_text(clean_txt)
-    #     self.model.model.cleaned_input_text = clean_txt
-    #
-    #     corpus = list(clean_txt[0+i:self.model.model.seqLen+i] for i
-    #                                                 in range(0, txt_len,
-    #                                                 self.model.model.seqLen))
-    #     self.model.model.tokenizer.fit_on_texts(corpus)
-    #     total_words = len(self.model.model.tokenizer.word_index) + 1
-    #     input_sequences = []
-    #     for line in corpus:
-    #         token_list = self.model.model.tokenizer.texts_to_sequences(
-    #                                                          [line])[0]
-    #         for i in range(1, len(token_list)):
-    #             n_gram_sequence = token_list[:i+1]
-    #             input_sequences.append(n_gram_sequence)
-    #     self.model.model.max_sequence_len = max([len(x) for x in
-    #                                                  input_sequences])
