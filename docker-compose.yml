@@ -1,0 +1,22 @@
+# See https://finnian.io/blog/ssl-with-docker-swarm-lets-encrypt-and-nginx/
+# and http://docs.gunicorn.org/en/stable/deploy.html
+version: '3.2'
+services:
+    nginx:
+        image: nginx:stable-alpine
+        volumes:
+            - /etc/letsencrypt:/etc/letsencrypt
+            - /usr/share/nginx/html:/usr/share/nginx/html
+            - /etc/nginx:/etc/nginx:ro
+        ports:
+            - 80:80
+            - 443:443
+        restart: on-failure
+
+    mimic-server:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        ports:
+            - 5000:5000
+        restart: on-failure
