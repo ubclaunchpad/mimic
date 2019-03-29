@@ -32,6 +32,7 @@ class LSTMModel(Model):
         """Use input text to train the LSTM model."""
         # Clean & verify text
         logging.info('Cleaning and verifying text')
+        # Training subset for speed
         text = text[:200000]
         clean_txt = utils.clean_text(text)
         txt_len = len(clean_txt)
