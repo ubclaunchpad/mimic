@@ -10,7 +10,7 @@ const MODEL_LSTM = "LSTM"
 const MODEL_MARKOV = "Markov Chain"
 const CORPUS_SHAKESPEARE = "Shakespeare"
 const CORPUS_TRUMP = "Trump Tweets"
-const BASE_URL = "whatisthis??" // TODO fill me out! 
+const BASE_URL = "http://localhost:5000" // TODO fill me out! 
 
 class TextGenerator extends React.Component {
 
@@ -31,13 +31,13 @@ class TextGenerator extends React.Component {
     console.log(mlModel)
     console.log(corpus)
     // Decide which endpoint to hit, set some defaults
-    let model = "lstm"
+    let modelUrl = "lstm"
     if (mlModel === MODEL_MARKOV) {
-      model = 'markov'
+      modelUrl = 'markov'
     }
-    let corpus = "trump"
+    let corpusUrl = "trump"
     if (corpus === CORPUS_SHAKESPEARE) {
-      corpus = "shakespeare"
+      corpusUrl = "shakespeare"
     }
     // Build request body
     let reqData = {
@@ -45,7 +45,7 @@ class TextGenerator extends React.Component {
       "seed_text": seedText
     }
     // Build URL
-    let url = BASE_URL + "/model/" + model + "/" + corpus
+    let url = BASE_URL + "/model/" + modelUrl + "/" + corpusUrl
     // Send request
     fetch(url, {
       method: "GET",
