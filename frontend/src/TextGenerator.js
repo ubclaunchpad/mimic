@@ -10,7 +10,7 @@ const MODEL_LSTM = "LSTM"
 const MODEL_MARKOV = "Markov Chain"
 const CORPUS_SHAKESPEARE = "Shakespeare"
 const CORPUS_TRUMP = "Trump Tweets"
-const BASE_URL = "whatisthis??" // TODO fill me out! 
+const BASE_URL = "http://localhost:5000" 
 
 class TextGenerator extends React.Component {
 
@@ -35,9 +35,12 @@ class TextGenerator extends React.Component {
     if (mlModel === MODEL_MARKOV) {
       model = 'markov'
     }
-    let corpus = "trump"
+
+    
     if (corpus === CORPUS_SHAKESPEARE) {
       corpus = "shakespeare"
+    } else if (corpus === CORPUS_TRUMP){
+      corpus = "trump"
     }
     // Build request body
     let reqData = {
@@ -48,17 +51,17 @@ class TextGenerator extends React.Component {
     let url = BASE_URL + "/model/" + model + "/" + corpus
     // Send request
     fetch(url, {
-      method: "GET",
+      method: "POST",
       body: JSON.stringify(reqData),
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin":"*"
       }
-    }).then(function(response) {
-      // Debugging
-      console.log(response.status)
-      console.log(response.text())
-      // Call the callback with the text generated
-      callback(response.text())
+    })
+    .then(response => { return response.json();})
+    .then(function(response) {
+      console.log("the response: " + response)
+      callback(response)
     }, function(error) {
       console.log("ERROR: " + error.message)
     })
