@@ -6,7 +6,12 @@ from flask import request
 import json
 from mimic.pretrained_model_factory import PretrainedModelFactory
 app = Flask(__name__)
-pretrained_factory = PretrainedModelFactory()
+
+factory = PretrainedModelFactory()
+lstm_trump = factory.create_pretrained_LSTM_trump_tweets_generator()
+markov_trump = factory.create_pretrained_markov_chain_trump_tweets_generator()
+lstm_sp = factory.create_pretrained_LSTM_shakespeare_text_generator()
+markov_sp = factory.create_pretrained_markov_chain_shakespeare_text_generator()
 
 
 @app.route('/status', methods=['GET'])
@@ -15,12 +20,41 @@ def status():
     return "it's up!"
 
 
-@app.route('/lstm_trump_tweets_model', methods=['GET'])
+@app.route('/model/lstm/trump', methods=['GET'])
 def get_lstm_trump_text():
     """Use the LSTM trump tweets model to generate text."""
     data = json.loads(request.data)
     sl = data["string_length"]
     st = data["seed_text"]
-    model = pretrained_factory.create_pretrained_LSTM_trump_tweets_generator()
-    gen_text = model.generate_text(seed_text=st, pred_len=int(sl))
+    gen_text = lstm_trump.generate_text(seed_text=st, pred_len=int(sl))
+    return gen_text
+
+
+@app.route('/model/markov/trump', methods=['GET'])
+def get_markov_trump_text():
+    """Use the markov trump tweets model to generate text."""
+    data = json.loads(request.data)
+    sl = data["string_length"]
+    st = data["seed_text"]
+    gen_text = markov_trump.generate_text(seed_text=st, pred_len=int(sl))
+    return gen_text
+
+
+@app.route('/model/lstm/shakespeare', methods=['GET'])
+def get_lstm_shakespeare_text():
+    """Use the LSTM shakespeare model to generate text."""
+    data = json.loads(request.data)
+    sl = data["string_length"]
+    st = data["seed_text"]
+    gen_text = lstm_sp.generate_text(seed_text=st, pred_len=int(sl))
+    return gen_text
+
+
+@app.route('/model/markov/shakespeare', methods=['GET'])
+def get_markov_shakespeare_text():
+    """Use the markov chain shakespeare model to generate text."""
+    data = json.loads(request.data)
+    sl = data["string_length"]
+    st = data["seed_text"]
+    gen_text = markov_sp.generate_text(seed_text=st, pred_len=int(sl))
     return gen_text
