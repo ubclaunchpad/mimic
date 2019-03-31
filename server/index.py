@@ -35,7 +35,7 @@ def get_lstm_trump_text():
     sl = data["string_length"]
     st = data["seed_text"]
     gen_text = lstm_trump.generate_text(seed_text=st, pred_len=int(sl))
-    return json.dumps(gen_text+"")
+    return json.dumps(gen_text)
 
 
 @app.route('/model/markov/trump', methods=['POST'])
@@ -45,7 +45,7 @@ def get_markov_trump_text():
     sl = data["string_length"]
     st = data["seed_text"]
     gen_text = markov_trump.generate_text(seed_text=st, pred_len=int(sl))
-    return json.dumps(gen_text+"")
+    return json.dumps(gen_text)
 
 
 @app.route('/model/lstm/shakespeare', methods=['POST'])
@@ -55,7 +55,7 @@ def get_lstm_shakespeare_text():
     sl = data["string_length"]
     st = data["seed_text"]
     gen_text = lstm_sp.generate_text(seed_text=st, pred_len=int(sl))
-    return json.dumps(gen_text+"")
+    return json.dumps(gen_text)
 
 
 @app.route('/model/markov/shakespeare', methods=['POST'])
@@ -65,5 +65,4 @@ def get_markov_shakespeare_text():
     sl = data["string_length"]
     st = data["seed_text"]
     gen_text = markov_sp.generate_text(seed_text=st, pred_len=int(sl))
-    return json.dumps(gen_text+"")
-
+    return json.dumps(gen_text)
