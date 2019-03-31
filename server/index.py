@@ -8,6 +8,7 @@ import json
 from mimic.pretrained_model_factory import PretrainedModelFactory
 from flask_cors import CORS
 app = Flask(__name__)
+CORS(app)
 
 factory = PretrainedModelFactory()
 lstm_trump = factory.create_pretrained_LSTM_trump_tweets_generator()
@@ -15,21 +16,11 @@ markov_trump = factory.create_pretrained_markov_chain_trump_tweets_generator()
 lstm_sp = factory.create_pretrained_LSTM_shakespeare_text_generator()
 markov_sp = factory.create_pretrained_markov_chain_shakespeare_text_generator()
 
-CORS(app)
 
 @app.route('/status', methods=['GET'])
 def status():
     """Status endpoint."""
     return "it's up!"
-
-
-@app.route('/test-model', methods=['POST'])
-def get_text():
-    """Use pretrained model to generate text by the requested parameters."""
-    data = json.loads(request.data)
-    string_length = data["string_length"]
-    seed_text = data["seed_text"]
-    return json.dumps("deferring this until we have pretrained models!!!")
 
 
 @app.route('/model/lstm/trump', methods=['POST'])

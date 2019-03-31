@@ -44,7 +44,7 @@ class TextGenerator extends React.Component {
     }
     // Build request body
     let reqData = {
-      "string_length": outputLen, // TODO could probably convert into a number here, but it is done in backend
+      "string_length": outputLen,
       "seed_text": seedText
     }
     // Build URL
@@ -60,7 +60,6 @@ class TextGenerator extends React.Component {
     })
     .then(response => { return response.json();})
     .then(function(response) {
-      console.log("the response: " + response)
       callback(response)
     }, function(error) {
       console.log("ERROR: " + error.message)
