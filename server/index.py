@@ -4,11 +4,16 @@ from mimic.text_generator import TextGenerator
 from mimic.text_generator_factory import TextGeneratorFactory
 from flask import request
 import json
-
 from mimic.pretrained_model_factory import PretrainedModelFactory
 from flask_cors import CORS
 app = Flask(__name__)
 CORS(app)
+
+factory = PretrainedModelFactory()
+lstm_trump = factory.create_pretrained_LSTM_trump_tweets_generator()
+markov_trump = factory.create_pretrained_markov_chain_trump_tweets_generator()
+lstm_sp = factory.create_pretrained_LSTM_shakespeare_text_generator()
+markov_sp = factory.create_pretrained_markov_chain_shakespeare_text_generator()
 
 factory = PretrainedModelFactory()
 lstm_trump = factory.create_pretrained_LSTM_trump_tweets_generator()
@@ -61,3 +66,4 @@ def get_markov_shakespeare_text():
     st = data["seed_text"]
     gen_text = markov_sp.generate_text(seed_text=st, pred_len=int(sl))
     return json.dumps(gen_text+"")
+
