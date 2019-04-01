@@ -21,8 +21,6 @@ pycodestyle = "*"
 pydocstyle = "*"
 pytest = "*"
 pytest-cov = "*"
-flask = "*"
-flask_cors = "*"
 
 [requires]
 python_version = "3.6"
