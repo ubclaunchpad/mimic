@@ -46,7 +46,7 @@ To start the server:
 
 ```
 $ export FLASK_APP=index.py
-$ flask run
+$ flask run --without-threads
   Running on http://127.0.0.1:5000/
 ```
 
