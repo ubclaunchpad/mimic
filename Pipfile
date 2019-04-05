@@ -4,15 +4,16 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-requests = "*"
-toml = "*"
-keras = "*"
-tensorflow = "*"
-selenium = "*"
 bs4 = "*"
-lxml = "*"
 flask = "*"
 flask_cors = "*"
+gunicorn = "*"
+keras = "*"
+lxml = "*"
+requests = "*"
+selenium = "*"
+tensorflow = "*"
+toml = "*"
 
 [dev-packages]
 codecov = "*"
@@ -24,3 +25,6 @@ pytest-cov = "*"
 
 [requires]
 python_version = "3.6"
+
+[scripts]
+launch = "gunicorn -b 0.0.0.0:5000 -w 4 server.server:app"
