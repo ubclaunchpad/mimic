@@ -11,6 +11,8 @@ tensorflow = "*"
 selenium = "*"
 bs4 = "*"
 lxml = "*"
+flask = "*"
+flask_cors = "*"
 
 [dev-packages]
 codecov = "*"
@@ -19,7 +21,6 @@ pycodestyle = "*"
 pydocstyle = "*"
 pytest = "*"
 pytest-cov = "*"
-flask = "*"
 
 [requires]
 python_version = "3.6"
