@@ -10,7 +10,10 @@ const MODEL_LSTM = "LSTM"
 const MODEL_MARKOV = "Markov Chain"
 const CORPUS_SHAKESPEARE = "Shakespeare"
 const CORPUS_TRUMP = "Trump Tweets"
+<<<<<<< HEAD
+=======
 const BASE_URL = "http://localhost:5000" 
+>>>>>>> master
 
 class TextGenerator extends React.Component {
 
@@ -23,13 +26,20 @@ class TextGenerator extends React.Component {
     this.corpusRef = React.createRef();
   }
 
+<<<<<<< HEAD
+  handleSubmit(event, outputLen, seedText, mlModel, corpus) {
+    event.preventDefault();
+=======
   handleSubmit(event, outputLen, seedText, mlModel, corpus, callback) {
     event.preventDefault();
     // For debugging
+>>>>>>> master
     console.log(outputLen)
     console.log(seedText)
     console.log(mlModel)
     console.log(corpus)
+<<<<<<< HEAD
+=======
     // Decide which endpoint to hit, set some defaults
     let model = "lstm"
     if (mlModel === MODEL_MARKOV) {
@@ -64,6 +74,7 @@ class TextGenerator extends React.Component {
     }, function(error) {
       console.log("ERROR: " + error.message)
     })
+>>>>>>> master
   }
 
   render() {
@@ -75,8 +86,12 @@ class TextGenerator extends React.Component {
                                              this.outputLenRef.current.value,
                                              this.seedTextRef.current.value,
                                              this.mlModelRef.current.value,
+<<<<<<< HEAD
+                                             this.corpusRef.current.value)}>
+=======
                                              this.corpusRef.current.value,
                                              this.props.textGeneratedCallback)}>
+>>>>>>> master
         <Row>
           <Col>
             <Form.Group controlId="formOutputLen">
